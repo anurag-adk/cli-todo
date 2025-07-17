@@ -87,7 +87,17 @@ class TodoApp:
         print(f"Task completed: \"{task['description']}\"")
 
     def remove_task(self, task_id: int) -> None:
-        pass
+        # arg: task_id is the id of task to be removed
+
+        task = self.find_task_by_id(task_id)
+        if not task:
+            print(f"Error 400: Task with ID {task_id} not found")
+            return
+        
+        self.tasks.remove(task)
+        self.save_tasks()
+        
+        print(f"Task removed: \"{task['description']}\"")
 
     # display the cli commands 
     def show_help(self) -> None:
@@ -118,5 +128,16 @@ class TodoApp:
                 try:
                     task_id = int(self.args[1])
                     self.complete_task(task_id)
+                except ValueError:
+                    print("Error 400: Task ID must be an integer")
+
+        elif command == "remove":
+            if len(self.args) < 2:
+                print("Error 400: Task ID is required")
+                print("Usage: python main.py remove <task id>")
+            else:
+                try:
+                    task_id = int(self.args[1])
+                    self.remove_task(task_id)
                 except ValueError:
                     print("Error 400: Task ID must be an integer")
