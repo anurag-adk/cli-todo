@@ -26,6 +26,12 @@ class TodoApp:
     # add a new task
     # arg: description is the task description
     def add_task(self, description: str) -> None:
+        # no need to validate description since we have handled it at run time
+        
+        # if not description.strip():
+        #     print("Error 400: Task description cannot be empty")
+        #     return
+        
         task = {
             'id': self.task_id,
             'description': description.strip(),
@@ -55,7 +61,7 @@ class TodoApp:
 
         if command == "add":
             if len(self.args) < 2:
-                print("Error 400: Task description cannot be empty bro")
+                print("Error 400: Task description cannot be empty")
                 print("Usage: python main.py add <task description>")
             else:
                 task_description = " ".join(self.args[1:])
