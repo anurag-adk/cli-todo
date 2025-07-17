@@ -8,17 +8,25 @@ class TodoApp:
     def __init__(self):
         self.file_name = "todo_data.json"
         self.tasks: List[Dict[str, Any]] = []
-        self.task_id = 1
+        self.next_id = 1
         self.load_tasks()
         self.args = sys.argv[1:]
 
+    # read tasks from JSON file
     def load_tasks(self) -> None:
-        pass
+        try:
+            with open(self.file_name, 'r') as file:
+                self.tasks = json.load(file)
+                if self.tasks:
+                    self.next_id = max(task['id'] for task in self.tasks) + 1
+        except Exception as e:
+            print(f"Error loading tasks: {e}")
 
     # write tasks into JSON file
     def save_tasks(self) -> None:
         try:
-            with open(self.file_name, "a") as file:
+            with open(self.file_name, "w") as file:
+                # we are using "w" mode instead of "a" since we are loading the file beforehand and we need to overwrite to avoid duplicates
                 json.dump(self.tasks, file, indent=2)
         except Exception as e:
             print(f"Error saving tasks: {e}")
@@ -26,7 +34,7 @@ class TodoApp:
     def list_tasks(self) -> None:
         pass
 
-    def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
+    def find_task_by_id(self, next_id: int) -> Optional[Dict[str, Any]]:
         pass
     
     # arg: description is the task description
@@ -38,21 +46,21 @@ class TodoApp:
         #     return
         
         task = {
-            'id': self.task_id,
+            'id': self.next_id,
             'description': description.strip(),
             'completed': False
         }
         
         self.tasks.append(task)
-        self.task_id += 1
+        self.next_id += 1
         self.save_tasks()
         
         print(f"Task added: \"{task['description']}\"")
 
-    def complete_task(self, task_id: int) -> None:
+    def complete_task(self, next_id: int) -> None:
         pass
 
-    def remove_task(self, task_id: int) -> None:
+    def remove_task(self, next_id: int) -> None:
         pass
 
     # display the cli commands 
@@ -70,5 +78,5 @@ class TodoApp:
                 print("Usage: python main.py add <task description>")
             else:
                 task_description = " ".join(self.args[1:])
+                # print(f"{task_description}")
                 self.add_task(task_description)
-            
