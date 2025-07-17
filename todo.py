@@ -68,10 +68,7 @@ class TodoApp:
         # arg: task_id is the id of task to mark as completed
 
         task = self.find_task_by_id(task_id)
-        if not task:
-            print(f"Error 400: Task with ID {task_id} not found")
-            return
-        
+        if not task: return
         task['completed'] = True
         self.save_tasks()
         
@@ -81,10 +78,7 @@ class TodoApp:
         # arg: task_id is the id of task to be removed
 
         task = self.find_task_by_id(task_id)
-        if not task:
-            print(f"Error 400: Task with ID {task_id} not found")
-            return
-        
+        if not task: return
         self.tasks.remove(task)
         self.save_tasks()
         
@@ -111,7 +105,7 @@ Examples:
 
     # run the cli app
     def run(self) -> None:
-        print("cli app is running ...") 
+        # print("cli app is running ...") 
         command = self.args[0].lower()
 
         if command == "add":
@@ -127,22 +121,14 @@ Examples:
             self.list_tasks()
 
         elif command == "complete":
-            if len(self.args) < 2:
-                print("Error 400: Task ID is required")
-                print("Usage: python main.py complete <task id>")
-            else:
-                task_id = self.validate_task_id()
-                if task_id is not None:
-                    self.complete_task(task_id)
+            task_id = self.validate_task_id()
+            if task_id is not None:
+                self.complete_task(task_id)
 
         elif command == "remove":
-            if len(self.args) < 2:
-                print("Error 400: Task ID is required")
-                print("Usage: python main.py remove <task id>")
-            else:
-                task_id = self.validate_task_id()
-                if task_id is not None:
-                    self.remove_task(task_id)
+            task_id = self.validate_task_id()
+            if task_id is not None:
+                self.remove_task(task_id)
         
         elif command == "help":
             self.show_help()
@@ -158,18 +144,23 @@ Examples:
         for task in self.tasks:
             if task['id'] == task_id:
                 return task
+        print(f"Error 400: Task with ID {task_id} not found")
         return None
     
     def validate_task_id(self) -> Optional[int]:
         # return: task_id if valid else return None
-                
-        try:
-            task_id = int(self.args[1])
-            if task_id <= 0:
+        if len(self.args) < 2: 
+            print("Error 400: Task ID is required")
+            print("Usage: python main.py <command> <task id>")
+            return None
+        else:       
+            try:
+                task_id = int(self.args[1])
+                if task_id <= 0:
+                    print("Error 400: Task ID must be a positive number")
+                    return None
+                return task_id
+            
+            except ValueError:
                 print("Error 400: Task ID must be a positive number")
                 return None
-            return task_id
-        
-        except ValueError:
-            print("Error 400: Task ID must be a positive number")
-            return None
