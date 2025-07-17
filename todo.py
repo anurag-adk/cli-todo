@@ -7,15 +7,13 @@ class TodoApp:
     def __init__(self):
         self.file_path = "todo_data.json"
         self.tasks: List[Dict[str, Any]] = []
-        self.next_id = 1
+        self.task_id = 1
         self.load_tasks()
         self.args = sys.argv[1:]
 
-    # load tasks from the JSON file 
     def load_tasks(self) -> None:
         pass
 
-    # save tasks to the JSON file
     def save_tasks(self) -> None:
         pass
 
@@ -25,14 +23,24 @@ class TodoApp:
     def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
         pass
     
+    # add a new task
+    # arg: description is the task description
     def add_task(self, description: str) -> None:
-        pass
+        task = {
+            'id': self.task_id,
+            'description': description.strip(),
+            'completed': False
+        }
+        
+        self.tasks.append(task)
+        self.task_id += 1
+        self.save_tasks()
+        
+        print(f"Task added: \"{task['description']}\"")
 
-    # mark a task as completed by its ID
     def complete_task(self, task_id: int) -> None:
         pass
 
-    # remove a task by its ID
     def remove_task(self, task_id: int) -> None:
         pass
 
@@ -40,7 +48,16 @@ class TodoApp:
     def show_help(self) -> None:
         pass
 
-
     # run the cli app
     def run(self) -> None:
-        print(f"CLI app is up and running")
+        print("cli app is running ...") 
+        command = self.args[0].lower()
+
+        if command == "add":
+            if len(self.args) < 2:
+                print("Error 400: Task description cannot be empty bro")
+                print("Usage: python main.py add <task description>")
+            else:
+                task_description = " ".join(self.args[1:])
+                self.add_task(task_description)
+            
