@@ -101,7 +101,22 @@ class TodoApp:
 
     # display the cli commands 
     def show_help(self) -> None:
-        pass
+        print("""
+Usage: python todo.py [command] [arguments]
+
+Commands:
+  add <task>        Add a new task
+  list              List all tasks
+  complete <id>     Mark task as complete
+  remove <id>       Remove a task
+  help              Show help message
+
+Examples:
+  python main.py add "Complete LSPP Assignment"
+  python main.py list
+  python main.py complete 1
+  python main.py remove 2
+""")
 
     # run the cli app
     def run(self) -> None:
@@ -141,3 +156,10 @@ class TodoApp:
                     self.remove_task(task_id)
                 except ValueError:
                     print("Error 400: Task ID must be an integer")
+        
+        elif command == "help":
+            self.show_help()
+
+        else:
+            print(f"Error 400: Unknown command: {command}")
+            print('Run "python main.py help" for available commands.')
