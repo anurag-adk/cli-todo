@@ -1,11 +1,12 @@
 # imports
 import sys
+import json
 from typing import List, Dict, Any, Optional
 
 class TodoApp:
     # define constructor to initialize the app
     def __init__(self):
-        self.file_path = "todo_data.json"
+        self.file_name = "todo_data.json"
         self.tasks: List[Dict[str, Any]] = []
         self.task_id = 1
         self.load_tasks()
@@ -14,8 +15,13 @@ class TodoApp:
     def load_tasks(self) -> None:
         pass
 
+    # write tasks into JSON file
     def save_tasks(self) -> None:
-        pass
+        try:
+            with open(self.file_name, "a") as file:
+                json.dump(self.tasks, file, indent=2)
+        except Exception as e:
+            print(f"Error saving tasks: {e}")
 
     def list_tasks(self) -> None:
         pass
@@ -23,11 +29,10 @@ class TodoApp:
     def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
         pass
     
-    # add a new task
     # arg: description is the task description
     def add_task(self, description: str) -> None:
         # no need to validate description since we have handled it at run time
-        
+
         # if not description.strip():
         #     print("Error 400: Task description cannot be empty")
         #     return
