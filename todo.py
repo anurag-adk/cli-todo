@@ -64,15 +64,6 @@ class TodoApp:
         
         print(f"Task added: \"{task['description']}\"")
 
-    def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
-        # arg: task_id is the id of task to find
-        # return: task dictionary if found else return None
-
-        for task in self.tasks:
-            if task['id'] == task_id:
-                return task
-        return None
-
     def complete_task(self, task_id: int) -> None:
         # arg: task_id is the id of task to mark as completed
 
@@ -140,22 +131,18 @@ Examples:
                 print("Error 400: Task ID is required")
                 print("Usage: python main.py complete <task id>")
             else:
-                try:
-                    task_id = int(self.args[1])
+                task_id = self.validate_task_id()
+                if task_id is not None:
                     self.complete_task(task_id)
-                except ValueError:
-                    print("Error 400: Task ID must be an integer")
 
         elif command == "remove":
             if len(self.args) < 2:
                 print("Error 400: Task ID is required")
                 print("Usage: python main.py remove <task id>")
             else:
-                try:
-                    task_id = int(self.args[1])
+                task_id = self.validate_task_id()
+                if task_id is not None:
                     self.remove_task(task_id)
-                except ValueError:
-                    print("Error 400: Task ID must be an integer")
         
         elif command == "help":
             self.show_help()
@@ -163,3 +150,26 @@ Examples:
         else:
             print(f"Error 400: Unknown command: {command}")
             print('Run "python main.py help" for available commands.')
+
+    def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
+        # arg: task_id is the id of task to find
+        # return: task dictionary if found else return None
+
+        for task in self.tasks:
+            if task['id'] == task_id:
+                return task
+        return None
+    
+    def validate_task_id(self) -> Optional[int]:
+        # return: task_id if valid else return None
+                
+        try:
+            task_id = int(self.args[1])
+            if task_id <= 0:
+                print("Error 400: Task ID must be a positive number")
+                return None
+            return task_id
+        
+        except ValueError:
+            print("Error 400: Task ID must be a positive number")
+            return None
