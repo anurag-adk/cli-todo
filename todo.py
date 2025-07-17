@@ -41,12 +41,9 @@ class TodoApp:
         else:
             print("\nYour tasks:")
             for task in self.tasks:
-                status_icon = "✓" if task['completed'] else "○"
+                status_icon = "x" if task['completed'] else "o"
                 print(f"{task['id']}. [{status_icon}] {task['description']}")
 
-    def find_task_by_id(self, next_id: int) -> Optional[Dict[str, Any]]:
-        pass
-    
     # arg: description is the task description
     def add_task(self, description: str) -> None:
         # no need to validate description since we have handled it at run time
@@ -67,10 +64,24 @@ class TodoApp:
         
         print(f"Task added: \"{task['description']}\"")
 
-    def complete_task(self, next_id: int) -> None:
-        pass
+    def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
+        for task in self.tasks:
+            if task['id'] == task_id:
+                return task
+        return None
 
-    def remove_task(self, next_id: int) -> None:
+    def complete_task(self, task_id: int) -> None:
+        task = self.find_task_by_id(task_id)
+        if not task:
+            print(f"Error 400: Task with ID {task_id} not found")
+            return
+        
+        task['completed'] = True
+        self.save_tasks()
+        
+        print(f"Task completed: \"{task['description']}\"")
+
+    def remove_task(self, task_id: int) -> None:
         pass
 
     # display the cli commands 
@@ -93,3 +104,14 @@ class TodoApp:
 
         elif command == "list":
             self.list_tasks()
+
+        elif command == "complete":
+            if len(self.args) < 2:
+                print("Error 400: Task ID is required")
+                print("Usage: python main.py complete <task id>")
+            else:
+                try:
+                    task_id = int(self.args[1])
+                    self.complete_task(task_id)
+                except ValueError:
+                    print("Error 400: Task ID must be an integer")
