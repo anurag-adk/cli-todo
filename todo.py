@@ -4,7 +4,7 @@ import json
 from typing import List, Dict, Any, Optional
 
 class TodoApp:
-    # define constructor to initialize the app
+    # constructor to initialize the app
     def __init__(self):
         self.file_name = "todo_data.json"
         self.tasks: List[Dict[str, Any]] = []
@@ -44,10 +44,10 @@ class TodoApp:
                 status_icon = "x" if task['completed'] else "o"
                 print(f"{task['id']}. [{status_icon}] {task['description']}")
 
-    # arg: description is the task description
     def add_task(self, description: str) -> None:
+        # arg: description is the task description
+        
         # no need to validate description since we have handled it at run time
-
         # if not description.strip():
         #     print("Error 400: Task description cannot be empty")
         #     return
@@ -65,12 +65,17 @@ class TodoApp:
         print(f"Task added: \"{task['description']}\"")
 
     def find_task_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
+        # arg: task_id is the id of task to find
+        # return: task dictionary if found else return None
+
         for task in self.tasks:
             if task['id'] == task_id:
                 return task
         return None
 
     def complete_task(self, task_id: int) -> None:
+        # arg: task_id is the id of task to mark as completed
+
         task = self.find_task_by_id(task_id)
         if not task:
             print(f"Error 400: Task with ID {task_id} not found")
