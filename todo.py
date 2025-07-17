@@ -32,7 +32,17 @@ class TodoApp:
             print(f"Error saving tasks: {e}")
 
     def list_tasks(self) -> None:
-        pass
+        print("\n" + "-" * 30)
+        print("TODO LIST")
+        print("-" * 30)
+        
+        if not self.tasks:
+            print("\nNo tasks found. Add a task to get started!")
+        else:
+            print("\nYour tasks:")
+            for task in self.tasks:
+                status_icon = "✓" if task['completed'] else "○"
+                print(f"{task['id']}. [{status_icon}] {task['description']}")
 
     def find_task_by_id(self, next_id: int) -> Optional[Dict[str, Any]]:
         pass
@@ -80,3 +90,6 @@ class TodoApp:
                 task_description = " ".join(self.args[1:])
                 # print(f"{task_description}")
                 self.add_task(task_description)
+
+        elif command == "list":
+            self.list_tasks()
